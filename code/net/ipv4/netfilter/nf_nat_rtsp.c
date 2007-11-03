@@ -78,11 +78,11 @@ MODULE_PARM_DESC(destaction, "Action for destination parameter (auto/strip/none)
 static void
 get_skb_tcpdata(struct sk_buff* skb, char** pptcpdata, uint* ptcpdatalen)
 {
-    struct iphdr*   iph  = (struct iphdr*)skb->nh.iph;
-    struct tcphdr*  tcph = (struct tcphdr*)((char*)iph + iph->ihl*4);
+    struct iphdr*   iph  = ip_hdr(skb);
+    struct tcphdr*  tcph = (void *)iph + ip_hdrlen(skb);
 
-    *pptcpdata = (char*)tcph + tcph->doff*4;
-    *ptcpdatalen = ((char*)skb->h.raw + skb->len) - *pptcpdata;
+    *pptcpdata = (char*)tcph +  tcph->doff*4;
+    *ptcpdatalen = ((char*)skb_transport_header(skb) + skb->len) - *pptcpdata;
 }
 
 /*** nat functions ***/
@@ -435,12 +435,12 @@ help(struct sk_buff **pskb, enum ip_conntrack_info ctinfo,
     return rc;
 }
 
-static void expected(struct ip_conntrack* ct, struct nf_conntrack_expect *exp)
+static void expected(struct nf_conn* ct, struct nf_conntrack_expect *exp)
 {
-    struct ip_nat_multi_range_compat mr;
+    struct nf_nat_multi_range_compat mr;
     u_int32_t newdstip, newsrcip, newip;
 
-    struct ip_conntrack *master = master_ct(ct);
+    struct nf_conn *master = ct->master;
 
     newdstip = master->tuplehash[IP_CT_DIR_ORIGINAL].tuple.src.u3.ip;
     newsrcip = ct->tuplehash[IP_CT_DIR_ORIGINAL].tuple.src.u3.ip;

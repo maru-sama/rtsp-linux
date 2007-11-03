@@ -388,13 +388,13 @@ static int help(struct sk_buff **pskb, unsigned int protoff,
 	}
 
 	/* Not whole TCP header? */
-	th = skb_header_pointer(*pskb, (*pskb)->nh.iph->ihl*4,
-				sizeof(_tcph), &_tcph);
+	th = skb_header_pointer(*pskb,protoff, sizeof(_tcph), &_tcph);
+
 	if (!th)
 		return NF_ACCEPT;
    
 	/* No data ? */
-	dataoff = (*pskb)->nh.iph->ihl*4 + th->doff*4;
+	dataoff = protoff + th->doff*4;
 	datalen = (*pskb)->len - dataoff;
 	if (dataoff >= (*pskb)->len)
 		return NF_ACCEPT;
