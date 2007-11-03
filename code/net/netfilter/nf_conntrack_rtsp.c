@@ -321,7 +321,7 @@ help_out(struct sk_buff **pskb, unsigned char *rb_ptr, unsigned int datalen,
 		DEBUGP("udp transport found, ports=(%d,%hu,%hu)\n",
 		       (int)expinfo.pbtype, expinfo.loport, expinfo.hiport);
 
-		exp = nf_conntrack_expect_alloc(ct);
+		exp = nf_ct_expect_alloc(ct);
 		if (!exp) {
 			ret = NF_DROP;
 			goto out;
@@ -329,7 +329,7 @@ help_out(struct sk_buff **pskb, unsigned char *rb_ptr, unsigned int datalen,
 
 		be_loport = htons(expinfo.loport);
 
-		nf_conntrack_expect_init(exp, ct->tuplehash[!dir].tuple.src.l3num,
+		nf_ct_expect_init(exp, ct->tuplehash[!dir].tuple.src.l3num,
 			&ct->tuplehash[!dir].tuple.src.u3, &ct->tuplehash[!dir].tuple.dst.u3,
 			IPPROTO_UDP, NULL, &be_loport); 
 
@@ -340,7 +340,7 @@ help_out(struct sk_buff **pskb, unsigned char *rb_ptr, unsigned int datalen,
 
 		if (expinfo.pbtype == pb_range) {
 			DEBUGP("Changing expectation mask to handle multiple ports\n");
-			exp->mask.dst.u.udp.port  = 0xfffe;
+			//exp->mask.dst.u.udp.port  = 0xfffe;
 		}
 
 		DEBUGP("expect_related %u.%u.%u.%u:%u-%u.%u.%u.%u:%u\n",
@@ -352,11 +352,11 @@ help_out(struct sk_buff **pskb, unsigned char *rb_ptr, unsigned int datalen,
 		if (nf_nat_rtsp_hook)
 			/* pass the request off to the nat helper */
 			ret = nf_nat_rtsp_hook(pskb, ctinfo, hdrsoff, hdrslen, &expinfo, exp);
-		else if (nf_conntrack_expect_related(exp) != 0) {
+		else if (nf_ct_expect_related(exp) != 0) {
 			INFOP("nf_conntrack_expect_related failed\n");
 			ret  = NF_DROP;
 		}
-		nf_conntrack_expect_put(exp);
+		nf_ct_expect_put(exp);
 		goto out;
 	}
 out:
@@ -385,7 +385,7 @@ static int help(struct sk_buff **pskb, unsigned int protoff,
 	    ctinfo != IP_CT_ESTABLISHED + IP_CT_IS_REPLY) {
 		DEBUGP("conntrackinfo = %u\n", ctinfo);
 		return NF_ACCEPT;
-	}
+	} 
 
 	/* Not whole TCP header? */
 	th = skb_header_pointer(*pskb,protoff, sizeof(_tcph), &_tcph);
@@ -477,10 +477,11 @@ init(void)
 	for (i = 0; (i < MAX_PORTS) && ports[i]; i++) {
 		hlpr = &rtsp_helpers[i];
 		memset(hlpr, 0, sizeof(struct nf_conntrack_helper));
+		hlpr->tuple.src.l3num = AF_INET;
 		hlpr->tuple.src.u.tcp.port = htons(ports[i]);
 		hlpr->tuple.dst.protonum = IPPROTO_TCP;
-		hlpr->mask.src.u.tcp.port = 0xFFFF;
-		hlpr->mask.dst.protonum = 0xFF;
+		//hlpr->mask.src.u.tcp.port = 0xFFFF;
+		//hlpr->mask.dst.protonum = 0xFF;
 		hlpr->max_expected = max_outstanding;
 		hlpr->timeout = setup_timeout;
 		hlpr->me = THIS_MODULE;

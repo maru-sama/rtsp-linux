@@ -157,7 +157,7 @@ rtsp_mangle_tran(enum ip_conntrack_info ctinfo,
         for (loport = prtspexp->loport; loport != 0; loport++) /* XXX: improper wrap? */
         {
             t->dst.u.udp.port = htons(loport);
-            if (nf_conntrack_expect_related(exp) == 0)
+            if (nf_ct_expect_related(exp) == 0)
             {
                 DEBUGP("using port %hu\n", loport);
                 break;
@@ -173,9 +173,9 @@ rtsp_mangle_tran(enum ip_conntrack_info ctinfo,
         for (loport = prtspexp->loport; loport != 0; loport += 2) /* XXX: improper wrap? */
         {
             t->dst.u.udp.port = htons(loport);
-            if (nf_conntrack_expect_related(exp) == 0)
+            if (nf_ct_expect_related(exp) == 0)
             {
-                hiport = loport + ~exp->mask.dst.u.udp.port;
+                hiport = loport + 1; //~exp->mask.dst.u.udp.port;
                 DEBUGP("using ports %hu-%hu\n", loport, hiport);
                 break;
             }
@@ -190,7 +190,7 @@ rtsp_mangle_tran(enum ip_conntrack_info ctinfo,
         for (loport = prtspexp->loport; loport != 0; loport++) /* XXX: improper wrap? */
         {
             t->dst.u.udp.port = htons(loport);
-            if (nf_conntrack_expect_related(exp) == 0)
+            if (nf_ct_expect_related(exp) == 0)
             {
                 DEBUGP("using port %hu (1 of 2)\n", loport);
                 break;
@@ -199,7 +199,7 @@ rtsp_mangle_tran(enum ip_conntrack_info ctinfo,
         for (hiport = prtspexp->hiport; hiport != 0; hiport++) /* XXX: improper wrap? */
         {
             t->dst.u.udp.port = htons(hiport);
-            if (nf_conntrack_expect_related(exp) == 0)
+            if (nf_ct_expect_related(exp) == 0)
             {
                 DEBUGP("using port %hu (2 of 2)\n", hiport);
                 break;
@@ -265,7 +265,7 @@ rtsp_mangle_tran(enum ip_conntrack_info ctinfo,
                                                          off, diff, NULL, 0))
                     {
                         /* mangle failed, all we can do is bail */
-			nf_conntrack_unexpect_related(exp);
+			nf_ct_unexpect_related(exp);
                         return 0;
                     }
                     get_skb_tcpdata(*pskb, &ptcp, &tcplen);
@@ -335,7 +335,7 @@ rtsp_mangle_tran(enum ip_conntrack_info ctinfo,
                                               origoff, origlen, rbuf, rbuflen))
                     {
                         /* mangle failed, all we can do is bail */
-			nf_conntrack_unexpect_related(exp);
+			nf_ct_unexpect_related(exp);
                         return 0;
                     }
                     get_skb_tcpdata(*pskb, &ptcp, &tcplen);
