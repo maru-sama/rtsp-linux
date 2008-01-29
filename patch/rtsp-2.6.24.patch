@@ -526,7 +526,7 @@ diff -purN linux-2.6.24-rc1.orig/net/ipv4/netfilter/nf_nat_rtsp.c linux-2.6.24-r
 +            t->dst.u.udp.port = htons(loport);
 +            if (nf_ct_expect_related(exp) == 0)
 +            {
-+                hiport = loport + ~exp->mask.src.u.udp.port;
++                hiport = loport + 1; //~exp->mask.dst.u.udp.port;
 +                pr_debug("using ports %hu-%hu\n", loport, hiport);
 +                break;
 +            }
@@ -1189,7 +1189,7 @@ diff -purN linux-2.6.24-rc1.orig/net/netfilter/nf_conntrack_rtsp.c linux-2.6.24-
 +
 +		if (expinfo.pbtype == pb_range) {
 +			pr_debug("Changing expectation mask to handle multiple ports\n");
-+			exp->mask.src.u.udp.port  = 0xfffe;
++			//exp->mask.dst.u.udp.port  = 0xfffe;
 +		}
 +
 +		pr_debug("expect_related %u.%u.%u.%u:%u-%u.%u.%u.%u:%u\n",
