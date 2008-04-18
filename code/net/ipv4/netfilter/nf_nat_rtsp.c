@@ -449,7 +449,7 @@ static void expected(struct nf_conn* ct, struct nf_conntrack_expect *exp)
     mr.range[0].flags = IP_NAT_RANGE_MAP_IPS;
     mr.range[0].min_ip = mr.range[0].max_ip = newip;
 
-    nf_nat_setup_info(ct, &mr.range[0], NF_IP_PRE_ROUTING);
+    nf_nat_setup_info(ct, &mr.range[0], IP_NAT_MANIP_DST);
 }
 
 
