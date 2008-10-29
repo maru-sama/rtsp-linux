@@ -34,16 +34,16 @@
 #include <net/tcp.h>
 #include <net/netfilter/nf_nat_helper.h>
 #include <net/netfilter/nf_nat_rule.h>
-#include <linux/netfilter/nf_conntrack_rtsp.h>
+#include "nf_conntrack_rtsp.h"
 #include <net/netfilter/nf_conntrack_expect.h>
 
 #include <linux/inet.h>
 #include <linux/ctype.h>
 #define NF_NEED_STRNCASECMP
 #define NF_NEED_STRTOU16
-#include <linux/netfilter_helpers.h>
+#include "netfilter_helpers.h"
 #define NF_NEED_MIME_NEXTLINE
-#include <linux/netfilter_mime.h>
+#include "netfilter_mime.h"
 
 #define MAX_PORTS       8
 #define DSTACT_AUTO     0

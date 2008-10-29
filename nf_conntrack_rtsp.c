@@ -37,15 +37,15 @@
 #include <net/netfilter/nf_conntrack.h>
 #include <net/netfilter/nf_conntrack_expect.h>
 #include <net/netfilter/nf_conntrack_helper.h>
-#include <linux/netfilter/nf_conntrack_rtsp.h>
+#include "nf_conntrack_rtsp.h"
 
 #define NF_NEED_STRNCASECMP
 #define NF_NEED_STRTOU16
 #define NF_NEED_STRTOU32
 #define NF_NEED_NEXTLINE
-#include <linux/netfilter_helpers.h>
+#include "netfilter_helpers.h"
 #define NF_NEED_MIME_NEXTLINE
-#include <linux/netfilter_mime.h>
+#include "netfilter_mime.h"
 
 #include <linux/ctype.h>
 #define MAX_SIMUL_SETUP 8 /* XXX: use max_outstanding */
