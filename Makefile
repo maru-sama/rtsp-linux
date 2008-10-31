@@ -20,9 +20,6 @@ modules_install:
 	$(MAKE) -C $(KERNELDIR) M=`pwd` modules_install
 
 clean:
-	rm -f *.o *.ko *.mod.c
-	rm -f .*.cmd
-	rm -f Module.symvers modules.order 
-	rm -rf .tmp_versions
+	rm -rf *.o *.ko *.mod.c .*.cmd Module.symvers modules.order .tmp_versions
 
 endif
