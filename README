@@ -32,7 +32,7 @@ variable accordingly.
 After that a:
 
 	* make 
-	* make install (as root)
+	* make modules_install (as root)
 
 should be enough.  
 Then do a "modprobe nf_nat_rtsp" as root and try to connect to a RTSP
