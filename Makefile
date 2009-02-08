@@ -4,7 +4,7 @@ ifndef CONFIG_NF_CONNTRACK
 $(error ** You need to enable NF_CONNTRACK in your kernel **)
 endif
 
-obj-$(CONFIG_NF_CONNTRACK) := nf_conntrack_rtsp.o nf_nat_rtsp.o
+obj-m := nf_conntrack_rtsp.o nf_nat_rtsp.o
 else
 
 # Normal Makefile
