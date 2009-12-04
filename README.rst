@@ -23,10 +23,10 @@ Build Instructions:
 ===================
 
 Have the kernel source ready in some place and NF_CONNTRACK_NAT enabled in the
-configuration other wise you will get an error during make. The Kbuild setup
+configuration otherwise you will get an error during make. The Kbuild setup
 looks in /lib/modules/\`uname -r\`/build for the source. 
 
-If you have the it located in another place set the KERNELDIR environment
+If you the source islocated in another place set the KERNELDIR environment
 variable accordingly.
 
 After that a:
@@ -37,5 +37,4 @@ After that a:
 should be enough.  
 Then do a "modprobe nf_nat_rtsp" as root and try to connect to a RTSP
 service.
-
 
