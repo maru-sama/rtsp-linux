@@ -26,7 +26,7 @@ Have the kernel source ready in some place and NF_CONNTRACK_NAT enabled in the
 configuration otherwise you will get an error during make. The Kbuild setup
 looks in /lib/modules/\`uname -r\`/build for the source. 
 
-If you the source islocated in another place set the KERNELDIR environment
+If the source is located in another place set the KERNELDIR environment
 variable accordingly.
 
 After that a:
