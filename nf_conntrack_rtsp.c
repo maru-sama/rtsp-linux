@@ -343,10 +343,10 @@ help_out(struct sk_buff *skb, unsigned char *rb_ptr, unsigned int datalen,
 			//exp->mask.dst.u.udp.port  = 0xfffe;
 		}
 
-		pr_debug("expect_related %u.%u.%u.%u:%u-%u.%u.%u.%u:%u\n",
-		       NIPQUAD(exp->tuple.src.u3.ip),
+		pr_debug("expect_related %pI4:%u-%pI4:%u\n",
+		       &exp->tuple.src.u3.ip,
 		       ntohs(exp->tuple.src.u.udp.port),
-		       NIPQUAD(exp->tuple.dst.u3.ip),
+		       &exp->tuple.dst.u3.ip,
 		       ntohs(exp->tuple.dst.u.udp.port));
 
 		nf_nat_rtsp = rcu_dereference(nf_nat_rtsp_hook);
