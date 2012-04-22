@@ -430,7 +430,7 @@ help(struct sk_buff *skb, enum ip_conntrack_info ctinfo,
 
 static void expected(struct nf_conn* ct, struct nf_conntrack_expect *exp)
 {
-    struct nf_nat_multi_range_compat mr;
+    struct nf_nat_ipv4_multi_range_compat mr;
     u_int32_t newdstip, newsrcip, newip;
 
     struct nf_conn *master = ct->master;
@@ -446,10 +446,10 @@ static void expected(struct nf_conn* ct, struct nf_conntrack_expect *exp)
 
     mr.rangesize = 1;
     // We don't want to manip the per-protocol, just the IPs. 
-    mr.range[0].flags = IP_NAT_RANGE_MAP_IPS;
+    mr.range[0].flags = NF_NAT_RANGE_MAP_IPS;
     mr.range[0].min_ip = mr.range[0].max_ip = newip;
 
-    nf_nat_setup_info(ct, &mr.range[0], IP_NAT_MANIP_DST);
+    nf_nat_setup_info(ct, &mr.range[0], NF_NAT_MANIP_DST);
 }
 
 
