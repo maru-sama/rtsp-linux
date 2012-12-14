@@ -496,7 +496,7 @@ init(void)
 		} else {
 			sprintf(tmpname, "rtsp-%d", i);
 		}
-		hlpr->name = tmpname;
+		strncpy(hlpr->name, tmpname, sizeof(hlpr->name));
 
 		pr_debug("port #%d: %d\n", i, ports[i]);
 
