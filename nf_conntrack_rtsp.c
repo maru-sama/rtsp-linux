@@ -73,6 +73,7 @@ static struct nf_conntrack_expect_policy rtsp_exp_policy;
 
 unsigned int (*nf_nat_rtsp_hook)(struct sk_buff *skb,
 				 enum ip_conntrack_info ctinfo,
+				 unsigned int protoff,
 				 unsigned int matchoff, unsigned int matchlen,struct ip_ct_rtsp_expect* prtspexp,
 				 struct nf_conntrack_expect *exp);
 void (*nf_nat_rtsp_hook_expectfn)(struct nf_conn *ct, struct nf_conntrack_expect *exp);
@@ -268,7 +269,8 @@ void expected(struct nf_conn *ct, struct nf_conntrack_expect *exp)
 
 static inline int
 help_out(struct sk_buff *skb, unsigned char *rb_ptr, unsigned int datalen,
-                struct nf_conn *ct, enum ip_conntrack_info ctinfo)
+         struct nf_conn *ct, enum ip_conntrack_info ctinfo, 
+         unsigned int protoff)
 {
 	struct ip_ct_rtsp_expect expinfo;
 	
@@ -352,7 +354,7 @@ help_out(struct sk_buff *skb, unsigned char *rb_ptr, unsigned int datalen,
 		nf_nat_rtsp = rcu_dereference(nf_nat_rtsp_hook);
 		if (nf_nat_rtsp && ct->status & IPS_NAT_MASK)
 			/* pass the request off to the nat helper */
-			ret = nf_nat_rtsp(skb, ctinfo, hdrsoff, hdrslen, &expinfo, exp);
+			ret = nf_nat_rtsp(skb, ctinfo, protoff, hdrsoff, hdrslen, &expinfo, exp);
 		else if (nf_ct_expect_related(exp) != 0) {
 			pr_info("nf_conntrack_expect_related failed\n");
 			ret  = NF_DROP;
@@ -419,7 +421,7 @@ static int help(struct sk_buff *skb, unsigned int protoff,
 
 	switch (CTINFO2DIR(ctinfo)) {
 	case IP_CT_DIR_ORIGINAL:
-		ret = help_out(skb, rb_ptr, datalen, ct, ctinfo);
+		ret = help_out(skb, rb_ptr, datalen, ct, ctinfo, protoff);
 		break;
 	case IP_CT_DIR_REPLY:
 		pr_debug("IP_CT_DIR_REPLY\n");
@@ -496,7 +498,7 @@ init(void)
 		} else {
 			sprintf(tmpname, "rtsp-%d", i);
 		}
-		strncpy(hlpr->name, tmpname, sizeof(hlpr->name));
+		strlcpy(hlpr->name, tmpname, sizeof(hlpr->name));
 
 		pr_debug("port #%d: %d\n", i, ports[i]);
 

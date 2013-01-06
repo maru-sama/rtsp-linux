@@ -50,6 +50,7 @@ struct ip_ct_rtsp_expect
 
 extern unsigned int (*nf_nat_rtsp_hook)(struct sk_buff *skb,
 				 enum ip_conntrack_info ctinfo,
+				 unsigned int protoff,
 				 unsigned int matchoff, unsigned int matchlen,
 				 struct ip_ct_rtsp_expect *prtspexp,
 				 struct nf_conntrack_expect *exp);
