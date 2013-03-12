@@ -533,6 +533,7 @@ init(void)
 	/* If no port given, default to standard rtsp port */
 	if (ports[0] == 0) {
 		ports[0] = RTSP_PORT;
+		num_ports = 1;
 	}
 
 	for (i = 0; (i < MAX_PORTS) && ports[i]; i++) {
@@ -566,7 +567,6 @@ init(void)
 			fini();
 			return -EBUSY;
 		}
-		num_ports++;
 	}
 	return 0;
 }
