@@ -10,8 +10,9 @@
  * 2007-04-18: Michael Guntsche <mike at it-loops.com>
  * 			- Port to new NF API
  * 2013-03-04: Il'inykh Sergey <sergeyi at inango-sw.com>. Inango Systems Ltd
- *	- fixed rtcp nat mapping
- *	- fixed mapping when client_port is busy on nat host
+ *	- fixed rtcp nat mapping and other port mapping fixes
+ *	- simple TEARDOWN request handling
+ *	- codestyle fixes and other less significant bug fixes 
  *
  * based on ip_conntrack_irc.c
  *

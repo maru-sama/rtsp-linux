@@ -3,8 +3,9 @@
  * (C) 2003 by Tom Marshall <tmarshall at real.com>
  *
  * 2013-03-04: Il'inykh Sergey <sergeyi at inango-sw.com>. Inango Systems Ltd
- *	- fixed rtcp nat mapping
- *	- fixed mapping when client_port is busy on nat host
+ *	- fixed rtcp nat mapping and other port mapping fixes
+ *	- fixed system hard lock because of bug in the parser
+ *	- codestyle fixes and less significant fixes
  *
  * based on ip_nat_irc.c
  *
@@ -421,14 +422,14 @@ help_out(struct sk_buff *skb, enum ip_conntrack_info ctinfo,
 	 struct nf_conntrack_expect* rtp_exp,
 	 struct nf_conntrack_expect* rtcp_exp)
 {
-	char*   ptcp;
-	uint	tcplen;
-	uint	hdrsoff;
-	uint	hdrslen;
-	uint	lineoff;
-	uint	linelen;
-	uint	off;
-	int dir = CTINFO2DIR(ctinfo);
+	char* ptcp;
+	uint  tcplen;
+	uint  hdrsoff;
+	uint  hdrslen;
+	uint  lineoff;
+	uint  linelen;
+	uint  off;
+	int   dir = CTINFO2DIR(ctinfo);
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(3,7,0)
 	union nf_inet_addr saddr = rtp_exp->master->tuplehash[dir].tuple.src.u3;
 #else
