@@ -55,13 +55,13 @@
 #define NF_NEED_MIME_NEXTLINE
 #include "netfilter_mime.h"
 
-#define MAX_PORTS	   8
-#define DSTACT_AUTO	 0
-#define DSTACT_STRIP	1
-#define DSTACT_NONE	 2
+#define MAX_PORTS     8
+#define DSTACT_AUTO   0
+#define DSTACT_STRIP  1
+#define DSTACT_NONE   2
 
-static char*	stunaddr = NULL;
-static char*	destaction = NULL;
+static char* stunaddr = NULL;
+static char* destaction = NULL;
 
 static u_int32_t extip = 0;
 static int       dstact = 0;
@@ -297,13 +297,26 @@ rtsp_mangle_tran(enum ip_conntrack_info ctinfo,
 					is_stun = 1;
 
 				if (dstact == DSTACT_STRIP || (dstact == DSTACT_AUTO && !is_stun)) {
-					diff = nextfieldoff-off;
+					uint dstoff = (ptran-ptcp)+off;
+					uint dstlen = nextfieldoff-off;
+					char* pdstrep = NULL;
+					uint dstreplen = 0;
+					diff = dstlen;
+					if (dstact == DSTACT_AUTO && !is_stun) {
+						pr_debug("RTSP: replace dst addr\n");
+						dstoff += 12;
+						dstlen -= 13;
+						pdstrep = szextaddr;
+						dstreplen = extaddrlen;
+						diff = nextfieldoff-off-13-extaddrlen;
+					}
+
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(3,7,0)
 					if (!nf_nat_mangle_tcp_packet(skb, ct, ctinfo, protoff,
-								      (ptran-ptcp)+off, diff, NULL, 0)) {
+								      dstoff, dstlen, pdstrep, dstreplen)) {
 #else
 					if (!nf_nat_mangle_tcp_packet(skb, ct, ctinfo,
-								      (ptran-ptcp)+off, diff, NULL, 0)) {
+								      dstoff, dstlen, pdstrep, dstreplen)) {
 #endif
 						/* mangle failed, all we can do is bail */
 						nf_ct_unexpect_related(rtp_exp);
