@@ -111,7 +111,7 @@ static int rtsp_sprintf_addr(const struct nf_conn *ct, char *buffer,
 
 /*
  * Mangle the "Transport:" header:
- *   - Replace all occurences of "client_port=<spec>"
+ *   - Replace all occurrences of "client_port=<spec>"
  *   - Handle destination parameter
  *
  * In:
