@@ -534,7 +534,9 @@ nf_nat_rtsp(struct sk_buff *skb, enum ip_conntrack_info ctinfo,
 
 static void nf_nat_rtsp_expected(struct nf_conn* ct, struct nf_conntrack_expect *exp)
 {
-#if LINUX_VERSION_CODE < KERNEL_VERSION(3,3,0) || LINUX_VERSION_CODE >= KERNEL_VERSION(3,7,0)
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4,18,0)
+	struct nf_nat_range2 range;
+#elif LINUX_VERSION_CODE < KERNEL_VERSION(3,3,0) || LINUX_VERSION_CODE >= KERNEL_VERSION(3,7,0)
 	struct nf_nat_range range;
 #else
 	struct nf_nat_ipv4_range range;
