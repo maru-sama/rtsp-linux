@@ -14,6 +14,8 @@
 /* Only include these functions for kernel code. */
 #ifdef __KERNEL__
 
+#include <net/netfilter/nf_conntrack_expect.h>
+
 #include <linux/ctype.h>
 #define iseol(c) ( (c) == '\r' || (c) == '\n' )
 
@@ -127,6 +129,15 @@ nf_nextline(char* p, uint len, uint* poff, uint* plineoff, uint* plinelen)
     return 1;
 }
 #endif /* NF_NEED_NEXTLINE */
+
+static inline int rtsp_nf_ct_expect_related(struct nf_conntrack_expect *expect)
+{
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(5,3,0)
+	return nf_ct_expect_related(expect, 0);
+#else
+	return nf_ct_expect_related(expect);
+#endif
+}
 
 #endif /* __KERNEL__ */
 

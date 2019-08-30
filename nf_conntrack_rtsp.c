@@ -41,7 +41,6 @@
 #include <net/tcp.h>
 
 #include <net/netfilter/nf_conntrack.h>
-#include <net/netfilter/nf_conntrack_expect.h>
 #include <net/netfilter/nf_conntrack_helper.h>
 #include "nf_conntrack_rtsp.h"
 
@@ -396,8 +395,8 @@ help_out(struct sk_buff *skb, unsigned char *rb_ptr, unsigned int datalen,
 					  &expinfo, rtp_exp, rtcp_exp);
 #endif
 		else {
-			if (nf_ct_expect_related(rtp_exp) == 0) {
-				if (rtcp_exp && nf_ct_expect_related(rtcp_exp) != 0) {
+			if (rtsp_nf_ct_expect_related(rtp_exp) == 0) {
+				if (rtcp_exp && rtsp_nf_ct_expect_related(rtcp_exp) != 0) {
 					nf_ct_unexpect_related(rtp_exp);
 					pr_info("nf_conntrack_expect_related failed for rtcp\n");
 					ret = NF_DROP;

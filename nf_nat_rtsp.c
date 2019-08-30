@@ -46,7 +46,6 @@
 #endif
 #include <net/netfilter/nf_nat_helper.h>
 #include "nf_conntrack_rtsp.h"
-#include <net/netfilter/nf_conntrack_expect.h>
 
 #include <linux/inet.h>
 #include <linux/ctype.h>
@@ -202,7 +201,7 @@ rtsp_mangle_tran(enum ip_conntrack_info ctinfo,
 	case pb_single:
 		for (loport = prtspexp->loport; loport != 0; loport++) { /* XXX: improper wrap? */
 			rtp_t->dst.u.udp.port = htons(loport);
-			if (nf_ct_expect_related(rtp_exp) == 0) {
+			if (rtsp_nf_ct_expect_related(rtp_exp) == 0) {
 				pr_debug("using port %hu\n", loport);
 				break;
 			}
@@ -215,12 +214,12 @@ rtsp_mangle_tran(enum ip_conntrack_info ctinfo,
 	case pb_range:
 		for (loport = prtspexp->loport; loport != 0; loport += 2) { /* XXX: improper wrap? */
 			rtp_t->dst.u.udp.port = htons(loport);
-			if (nf_ct_expect_related(rtp_exp) != 0) {
+			if (rtsp_nf_ct_expect_related(rtp_exp) != 0) {
 				continue;
 			}
 			hiport = loport + 1;
 			rtcp_exp->tuple.dst.u.udp.port = htons(hiport);
-			if (nf_ct_expect_related(rtcp_exp) != 0) {
+			if (rtsp_nf_ct_expect_related(rtcp_exp) != 0) {
 				nf_ct_unexpect_related(rtp_exp);
 				continue;
 			}
@@ -243,14 +242,14 @@ rtsp_mangle_tran(enum ip_conntrack_info ctinfo,
 	case pb_discon:
 		for (loport = prtspexp->loport; loport != 0; loport++) { /* XXX: improper wrap? */
 			rtp_t->dst.u.udp.port = htons(loport);
-			if (nf_ct_expect_related(rtp_exp) == 0) {
+			if (rtsp_nf_ct_expect_related(rtp_exp) == 0) {
 				pr_debug("using port %hu (1 of 2)\n", loport);
 				break;
 			}
 		}
 		for (hiport = prtspexp->hiport; hiport != 0; hiport++) { /* XXX: improper wrap? */
 			rtp_t->dst.u.udp.port = htons(hiport);
-			if (nf_ct_expect_related(rtp_exp) == 0) {
+			if (rtsp_nf_ct_expect_related(rtp_exp) == 0) {
 				pr_debug("using port %hu (2 of 2)\n", hiport);
 				break;
 			}
