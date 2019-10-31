@@ -68,7 +68,7 @@ module_param_array(ports, int, &num_ports, 0400);
 MODULE_PARM_DESC(ports, "port numbers of RTSP servers");
 module_param(max_outstanding, int, 0400);
 MODULE_PARM_DESC(max_outstanding, "max number of outstanding SETUP requests per RTSP session");
-module_param(setup_timeout, int, 0400);
+module_param(setup_timeout, uint, 0400);
 MODULE_PARM_DESC(setup_timeout, "timeout on for unestablished data channels");
 
 static char *rtsp_buffer;
@@ -517,10 +517,6 @@ init(void)
 
 	if (max_outstanding < 1) {
 		printk("nf_conntrack_rtsp: max_outstanding must be a positive integer\n");
-		return -EBUSY;
-	}
-	if (setup_timeout < 0) {
-		printk("nf_conntrack_rtsp: setup_timeout must be a positive integer\n");
 		return -EBUSY;
 	}
 
