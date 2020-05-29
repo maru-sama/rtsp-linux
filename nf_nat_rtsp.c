@@ -248,8 +248,8 @@ rtsp_mangle_tran(enum ip_conntrack_info ctinfo,
 			}
 		}
 		for (hiport = prtspexp->hiport; hiport != 0; hiport++) { /* XXX: improper wrap? */
-			rtp_t->dst.u.udp.port = htons(hiport);
-			if (rtsp_nf_ct_expect_related(rtp_exp) == 0) {
+			rtcp_exp->tuple.dst.u.udp.port = htons(hiport);
+			if (rtsp_nf_ct_expect_related(rtcp_exp) == 0) {
 				pr_debug("using port %hu (2 of 2)\n", hiport);
 				break;
 			}
@@ -258,6 +258,11 @@ rtsp_mangle_tran(enum ip_conntrack_info ctinfo,
 			rbuf1len = sprintf(rbuf1, "%hu", loport);
 			rbufalen = sprintf(rbufa, hiport == loport+1 ?
 					   "%hu-%hu":"%hu/%hu", loport, hiport);
+		} else {
+			if (loport != 0)
+				nf_ct_unexpect_related(rtp_exp);
+			if (hiport != 0)
+				nf_ct_unexpect_related(rtcp_exp);
 		}
 		break;
 	}

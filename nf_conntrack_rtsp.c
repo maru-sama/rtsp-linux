@@ -351,7 +351,7 @@ help_out(struct sk_buff *skb, unsigned char *rb_ptr, unsigned int datalen,
 
 		rtp_exp->flags = 0;
 
-		if (expinfo.pbtype == pb_range) {
+		if (expinfo.pbtype == pb_range || expinfo.pbtype == pb_discon) {
 			pr_debug("setup expectation for rtcp\n");
 
 			be_hiport = htons(expinfo.hiport);
