@@ -550,7 +550,7 @@ init(void)
 		}
 
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(3,6,0)
-		strlcpy(hlpr->name, tmpname, sizeof(hlpr->name));
+		strscpy(hlpr->name, tmpname, sizeof(hlpr->name));
 #else
 		hlpr->name = tmpname;
 #endif
