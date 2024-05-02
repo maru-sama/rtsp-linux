@@ -1,3 +1,9 @@
+Update:
+=======
+
+I have not touched this code in years, therefore I am putting this repository in Archive mode
+since there are apparently still some active users.
+
 Disclaimer: 
 ===========
 
